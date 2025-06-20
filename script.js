@@ -18,16 +18,13 @@ function playGame() {
     let computerScore = 0;
 
     function playRound(humanChoice, computerChoice) {
-        console.log(`You chose: ${humanChoice}`);
-        console.log(`Computer chose: ${computerChoice}`);
-
         if(humanChoice === "Error") {console.log("Round skipped due to invalid input."); return "Round skipped due to invalid input.";}
         if(humanChoice === computerChoice) {return "Draw"}
         if(
             (humanChoice === "rock"     && computerChoice === "scissors")||
             (humanChoice === "paper"    && computerChoice === "rock"    )||
             (humanChoice === "scissors" && computerChoice === "paper"   )
-        ) {humanScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return("human wins!"); }
+        ) {humanScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return "Human wins!"; }
         else{computerScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return "Computer Wins!";}
     }
 
@@ -38,7 +35,7 @@ function playGame() {
         console.log(playRound(humanChoice, computerChoice))
     }
 
-    console.log(`Final Scores:\nYour score: ${humanScore}\nComputer Score: ${computerScore}`);
+    console.log(`Final Scores:\nYour score: ${humanScore}\nComputer Score: ${computerScore}\nDraws: ${5 - (humanScore + computerScore)}`);
     if (humanScore > computerScore) {
         console.log("You won the game!");
     } else if (computerScore > humanScore) {
