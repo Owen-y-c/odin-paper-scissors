@@ -42,7 +42,7 @@ function playGame() {
         console.log("Computer won the game!");
     } else {
         console.log("The game is a tie!");
-    }    
+    }
 }
 
 playGame();
