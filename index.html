@@ -3,12 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rock Paper Scissors</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Rock Paper Scissors!</h1><br>
-    <p>You can check the console aswell!</p>
+    <div class="app-wrapper">
+        <header>
+            <h1>Rock Paper Scissors!</h1>
+        </header>
+
+        <main>
+            <section class="score-container">
+                <div><p>Your score: <span class="score-player">0</span></p></div>
+                <div><p>Computer score: <span class="score-computer">0</span></p></div>
+                <div><p>Round: <span class="score-rounds">0</span></p></div>
+            </section>
+
+            <section class="game-status-container" aria-live="polite">
+                <div><span class="game-status-text">Ongoing.</span></div>
+            </section>
+
+            <section class="button-container">
+                <button id="user-rock">Rock</button>
+                <button id="user-paper">Paper</button>
+                <button id="user-scissors">Scissors</button>
+            </section>
+        </main>
+
+        <footer><p>Check the console for game details!</p></footer>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
