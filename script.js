@@ -4,10 +4,13 @@ const scorePlayer = document.querySelector(".score-player")
 const scoreComputer = document.querySelector(".score-computer")
 const scoreRound = document.querySelector(".score-rounds")
 const gameStatus = document.querySelector(".game-status-text")
-const userRock = document.querySelector("#user-rock")
-const userPaper = document.querySelector("#user-paper")
-const userScissors = document.querySelector("#user-scissors")
+const userButtons = document.querySelectorAll(".user-button")
 
+let humanScore = 0;
+let computerScore = 0;
+let roundCount = 0;
+
+// Get a random choice for the computer: rock, paper, or scissors
 function getComputerChoice() {
     let randomNumber = Math.floor(Math.random() * 3);
     if(randomNumber === 0) {return "rock";}
@@ -15,78 +18,91 @@ function getComputerChoice() {
     if(randomNumber === 2) {return "scissors";}
 }
 
-// function getHumanChoice() {
-//     let userInput = prompt("What's your choice?").trim().toLowerCase();
-//     if(userInput === "rock" || userInput === "paper" || userInput === "scissors") {return userInput;}
-//     else {alert("Input Error."); return "Error";}
+// Determine the outcome of a single round and update score
+function playRound(playerChoice, computerChoice) {
+    if(playerChoice === computerChoice) {return "Draw"}
+    if(
+        (playerChoice === "rock"     && computerChoice === "scissors")||
+        (playerChoice === "paper"    && computerChoice === "rock"    )||
+        (playerChoice === "scissors" && computerChoice === "paper"   )
+    ) {
+        humanScore ++;
+        console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`);
+        return "Human wins!";
+    } else {
+        computerScore ++;
+        console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`);
+        return "Computer Wins!";
+    }
+}
 
-// }
+// Handle each button click:
+function playHandler(event) {
+    //initialize items
+    const button = event.currentTarget;
+    const playerChoice = button.dataset.choice;
+    const computerChoice = getComputerChoice();
+    const result = playRound(playerChoice, computerChoice);
 
-// function playGame() {
-//     let humanScore = 0;
-//     let computerScore = 0;
+    //update items per round
+    roundCount++;
+    scorePlayer.textContent = humanScore;
+    scoreComputer.textContent = computerScore;
+    scoreRound.textContent = roundCount;
+    gameStatus.textContent = result;
 
-//     function playRound(humanChoice, computerChoice) {
-//         if(humanChoice === "Error") {console.log("Round skipped due to invalid input."); return "Round skipped due to invalid input.";}
-//         if(humanChoice === computerChoice) {return "Draw"}
-//         if(
-//             (humanChoice === "rock"     && computerChoice === "scissors")||
-//             (humanChoice === "paper"    && computerChoice === "rock"    )||
-//             (humanChoice === "scissors" && computerChoice === "paper"   )
-//         ) {humanScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return "Human wins!"; }
-//         else{computerScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return "Computer Wins!";}
-//     }
+    //check for endgame
+    if (humanScore >= 5 || computerScore >= 5) {
+        endGame();
+    }
+}
 
-//     for (let i = 0; i < 5; i++){
-//         let humanChoice = getHumanChoice();
-//         let computerChoice = getComputerChoice();
-//         console.log(`You chose: ${humanChoice}.\nComputer chose: ${computerChoice}`)
-//         console.log(playRound(humanChoice, computerChoice))
-//     }
+// End the game: show final message and convert buttons to restart
+function endGame() {
+    // Set final status
+    if (humanScore > computerScore) {
+        gameStatus.textContent = "Game Over: You Win!";
+    } else {
+        gameStatus.textContent = "Game Over: Computer Wins!";
+    }
 
-//     console.log(`Final Scores:\nYour score: ${humanScore}\nComputer Score: ${computerScore}\nDraws: ${5 - (humanScore + computerScore)}`);
-//     if (humanScore > computerScore) {
-//         console.log("You won the game!");
-//     } else if (computerScore > humanScore) {
-//         console.log("Computer won the game!");
-//     } else {
-//         console.log("The game is a tie!");
-//     }
-// }
+    // Change buttons to "Restart"
+    userButtons.forEach(button => {
+        button.textContent = "Restart";
+        button.removeEventListener("click", playHandler);
+        button.addEventListener("click", restartGame);
+    });
+}
 
-// function playGame() {
-//     let humanScore = 0;
-//     let computerScore = 0;
+// Restart game:
+function restartGame() {
+    //reset score
+    humanScore = 0;
+    computerScore = 0;
+    roundCount = 0;
 
-//     function playRound(humanChoice, computerChoice) {
-//         if(humanChoice === "Error") {console.log("Round skipped due to invalid input."); return "Round skipped due to invalid input.";}
-//         if(humanChoice === computerChoice) {return "Draw"}
-//         if(
-//             (humanChoice === "rock"     && computerChoice === "scissors")||
-//             (humanChoice === "paper"    && computerChoice === "rock"    )||
-//             (humanChoice === "scissors" && computerChoice === "paper"   )
-//         ) {humanScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return "Human wins!"; }
-//         else{computerScore ++; console.log(`Score - Human: ${humanScore}, Computer: ${computerScore}`); return "Computer Wins!";}
-//     }
+    //reset stats
+    scorePlayer.textContent = 0;
+    scoreComputer.textContent = 0;
+    scoreRound.textContent = 0;
+    gameStatus.textContent = "Ongoing.";
 
-//     for (let i = 0; i < 5; i++){
-//         let humanChoice = getHumanChoice();
-//         let computerChoice = getComputerChoice();
-//         console.log(`You chose: ${humanChoice}.\nComputer chose: ${computerChoice}`)
-//         console.log(playRound(humanChoice, computerChoice))
-//     }
+    //when clicked
+    userButtons.forEach(button => {
+        //restore button text
+        const choice = button.dataset.choice;
+        button.textContent = choice;
 
-//     console.log(`Final Scores:\nYour score: ${humanScore}\nComputer Score: ${computerScore}\nDraws: ${5 - (humanScore + computerScore)}`);
-//     if (humanScore > computerScore) {
-//         console.log("You won the game!");
-//     } else if (computerScore > humanScore) {
-//         console.log("Computer won the game!");
-//     } else {
-//         console.log("The game is a tie!");
-//     }
-// }
+        //disable buttons
+        button.removeEventListener("click", restartGame);
+        button.addEventListener("click", playHandler);
+    });
+}
 
-// playGame();
+//start game
+userButtons.forEach(button => {
+    button.addEventListener("click", playHandler);
+});
 
 //testing:
 console.log("You reached the end!");
